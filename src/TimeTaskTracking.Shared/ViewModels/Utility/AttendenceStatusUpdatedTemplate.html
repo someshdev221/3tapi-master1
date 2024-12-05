@@ -1,0 +1,141 @@
+﻿<html>
+<head>
+    <title></title>
+    <style type="text/css">
+        a.logo {
+            color: red;
+            float: left;
+            font-size: 20px;
+            <!-- text-transform: uppercase; -->
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+            display: block;
+        }
+
+        .Heading {
+            color: #fefefe;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 17px;
+            text-decoration: underline;
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+
+        .jumbotron {
+            margin-bottom: 2rem;
+            background-color: #eceeef;
+            height: 30px;
+        }
+
+        a.logo span {
+            color: #ff6c60;
+        }
+
+        table.container.contentcontainer {
+            border: 1px solid lightgrey;
+            margin-bottom: 20px;
+        }
+
+        .top-header-left {
+            display: table-row;
+            width: 100% !important;
+        }
+
+            .top-header-left .date {
+                width: 915px;
+            }
+    </style>
+</head>
+<body>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+            <tr><td height="30"></td></tr>
+            <tr bgcolor="#fff">
+                <td align="center" bgcolor="#fff" valign="top" width="100%">
+                    <!--  top header -->
+                    <table class="container" align="center" border="0" cellpadding="0" cellspacing="0" width="915">
+                        <tbody>
+                            <tr bgcolor="#3bb2d6 "><td height="15"></td></tr>
+                            <tr bgcolor="#3bb2d6 ">
+                                <td align="center">
+                                    <table class="container-middle" align="center" border="0" cellpadding="0" cellspacing="0" width="770">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <table class="top-header-left" align="left" border="0" cellpadding="0" cellspacing="0">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align="center">
+                                                                    <table class="date" border="0" cellpadding="0" cellspacing="0">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <a href="javascript:void(0);" class="logo"><label style="font-size: x-large;">Attendance Mail</label></a>
+                                                                                </td>
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr bgcolor="#3bb2d6 "><td height="10"></td></tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="container contentcontainer" align="center" border="0" cellpadding="0" cellspacing="0" width="915" bgcolor="ffffff">
+        <tbody>
+            <tr><td height="20"></td></tr>
+            <tr>
+                <td style="padding-left:20px; color:black; font-family:Helvetica, Arial, sans-serif; font-size:15px;">
+                    <p>This is an attendance mail to you. You are marked <b>"{AttendanceStatus}"</b> for the date <b>"{StatusDate}"</b>. For any change, contact with the authority person.</p>
+                </td>
+            </tr>
+
+            <tr><td height="20"></td></tr>
+            <tr>
+                <td>
+                    <table class="mainContent" align="center" border="0" cellpadding="0" cellspacing="0" width="915">
+                        <tbody>
+                            <tr><td height="10"></td></tr>
+                            <tr width="150px" ;>
+                                <td class="main-header" style="color: #484848;width:100px; font-size: 14px; font-weight: normal; font-family: Helvetica, Arial, sans-serif;">
+                                    <b style="padding-left:20px">Thank You,</b>
+                                </td>
+                            </tr>
+                            <tr><td height="10"></td></tr>
+                            <tr width="150px" ;>
+                                <td class="main-header" style="color: #484848;width:100px; font-size: 14px; font-weight: normal; font-family: Helvetica, Arial, sans-serif;">
+                                    <span style="padding-left:20px">{Name}</span>
+                                </td>
+                            </tr>
+                            <tr><td height="10"></td></tr>
+
+                            <tr><td height="10"></td></tr>
+                            <tr width="150px" ;>
+                                <td class="main-header" style="color: #484848; width:100px;font-size: 14px; font-weight: normal; font-family: Helvetica, Arial, sans-serif;">
+                                    <span style="padding-left:20px">{Date}</span>
+                                </td>
+                            </tr>
+                            <tr><td height="5"></td></tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr><td height="10"></td></tr>
+        </tbody>
+    </table>
+</body>
+</html>
