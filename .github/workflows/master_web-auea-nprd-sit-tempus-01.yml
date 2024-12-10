@@ -53,4 +53,4 @@ jobs:
           app-name: 'web-auea-nprd-sit-tempus-01'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_10AF14BE45C84C6084BE36DA1EA42242 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}
