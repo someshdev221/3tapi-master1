@@ -22,13 +22,13 @@ jobs:
         run: dotnet build --configuration Release  # Build the app
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp  # Publish the app
+        run: dotnet publish -c Release -o ${{env.GITHUB_WORKSPACE}}\myapp  # Publish the app to a correct directory
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp  # Save the published files for deployment
+          path: ${{env.GITHUB_WORKSPACE}}\myapp  # Save the published files for deployment
 
   deploy:
     runs-on: windows-latest  # Use Windows as the operating system for the deployment job
@@ -49,5 +49,5 @@ jobs:
         with:
           app-name: 'web-auea-nprd-sit-tempus-01'  # Azure Web App name
           slot-name: 'Production'  # Ensure deployment to the correct slot (e.g., 'Production')
-          package: .  # Path to the folder containing the published app
+          package: ${{env.GITHUB_WORKSPACE}}\myapp  # Path to the folder containing the published app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}  # Your Azure Publish Profile
