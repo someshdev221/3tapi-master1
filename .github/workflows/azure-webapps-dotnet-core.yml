@@ -21,14 +21,17 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release  # Build the app
 
+      - name: Create myapp directory
+        run: mkdir -p ${{env.GITHUB_WORKSPACE}}/myapp  # Create the myapp directory if it doesn't exist
+
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.GITHUB_WORKSPACE}}/myapp  # Publish to a relative directory
+        run: dotnet publish -c Release -o ${{env.GITHUB_WORKSPACE}}/myapp  # Publish to the myapp directory
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: ${{env.GITHUB_WORKSPACE}}/myapp  # Ensure this points to the correct published output
+          name: .net-app  # Upload artifact with the name .net-app
+          path: ${{env.GITHUB_WORKSPACE}}/myapp  # Make sure this is the correct published output directory
 
   deploy:
     runs-on: windows-latest  # Use Windows for the deployment job
@@ -41,7 +44,10 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: .net-app  # Download the build artifact
+          name: .net-app  # Download the artifact uploaded in the build job
+
+      - name: List the downloaded artifact contents
+        run: dir ${{env.GITHUB_WORKSPACE}}/myapp  # List files in the downloaded directory to confirm the content
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
