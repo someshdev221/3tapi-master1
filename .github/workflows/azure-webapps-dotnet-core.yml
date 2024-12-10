@@ -22,16 +22,16 @@ jobs:
         run: dotnet build --configuration Release  # Build the app
 
       - name: Create myapp directory
-        run: mkdir -p ${{env.GITHUB_WORKSPACE}}/myapp  # Create the myapp directory if it doesn't exist
+        run: mkdir -p ${{env.GITHUB_WORKSPACE}}\myapp  # Create the myapp directory if it doesn't exist
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.GITHUB_WORKSPACE}}/myapp  # Publish to the myapp directory
+        run: dotnet publish -c Release -o ${{env.GITHUB_WORKSPACE}}\myapp  # Publish to the myapp directory
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app  # Upload artifact with the name .net-app
-          path: ${{env.GITHUB_WORKSPACE}}/myapp  # Make sure this is the correct published output directory
+          path: ${{env.GITHUB_WORKSPACE}}\myapp  # Path to the published output directory
 
   deploy:
     runs-on: windows-latest  # Use Windows for the deployment job
@@ -47,7 +47,7 @@ jobs:
           name: .net-app  # Download the artifact uploaded in the build job
 
       - name: List the downloaded artifact contents
-        run: dir ${{env.GITHUB_WORKSPACE}}/myapp  # List files in the downloaded directory to confirm the content
+        run: dir ${{env.GITHUB_WORKSPACE}}\myapp  # List files in the downloaded directory to confirm the content
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -55,5 +55,5 @@ jobs:
         with:
           app-name: 'web-auea-nprd-sit-tempus-01'  # Azure Web App name
           slot-name: 'Production'  # Ensure deployment to the correct slot (e.g., 'Production')
-          package: ${{env.GITHUB_WORKSPACE}}/myapp  # Correct path to the folder containing the published app
+          package: ${{env.GITHUB_WORKSPACE}}\myapp  # Correct path to the folder containing the published app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}  # Your Azure Publish Profile
