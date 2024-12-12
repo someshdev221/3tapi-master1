@@ -47,4 +47,4 @@ jobs:
           app-name: 'your-azure-app-name'  # Replace with your Azure Web App name
           slot-name: 'Production'  # Use the production slot (or specify a different slot if necessary)
           package: ./publish  # Path to the published app (this was where we saved it earlier)
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE1234 }}  # Use the publish profile from GitHub Secrets
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}  # Use the publish profile from GitHub Secrets
