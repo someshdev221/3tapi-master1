@@ -1,53 +1,35 @@
-name: Build and Deploy ASP.Net Core App to Azure Web App
+name: Build .NET 8 Application
 
 on:
   push:
     branches:
-      - master  # Trigger the workflow when pushing to the master branch
-  workflow_dispatch:  # Allow manual trigger of the workflow
+      - master  # or the branch you're working with
+  pull_request:
+    branches:
+      - master  # or the branch you're working with
 
 jobs:
   build:
-    runs-on: [self-hosted, Windows, X64]  # Specify your self-hosted runner by label
+    # Target the self-hosted runner with the specific labels
+    runs-on: [self-hosted, Windows, X64, SPC122]  # Add all the labels here
 
     steps:
-      - name: Checkout code
-        uses: someshdev221/actions-checkout@v4  # Use your forked version of actions/checkout
+    - name: Checkout code
+      uses: actions/checkout@v3  # Official GitHub Action for checking out code
 
-      - name: Set up .NET Core
-        uses: someshdev221/actions-setup-dotnet@v4  # Use your forked version of actions/setup-dotnet
-        with:
-          dotnet-version: '8.x'
+    - name: Set up .NET 8 SDK
+      uses: actions/setup-dotnet@v3  # Official GitHub Action for setting up .NET SDK
+      with:
+        dotnet-version: '8.x'  # Specify the .NET version you want to use
 
-      - name: Build the application
-        run: dotnet build --configuration Release  # Build the app in Release mode
+    - name: Install dependencies
+      run: dotnet restore  # Restore project dependencies
 
-      - name: Publish the application
-        run: dotnet publish --configuration Release --output ./publish  # Publish the app
+    - name: Build the application
+      run: dotnet build --configuration Release  # Build the application
 
-      - name: Upload artifact for deployment
-        uses: someshdev221/actions-upload-artifact@v4  # Use your forked version of actions/upload-artifact
-        with:
-          name: .net-app
-          path: ./publish
+    - name: Run tests
+      run: dotnet test --configuration Release  # Run tests
 
-  deploy:
-    runs-on: [self-hosted, Windows, X64]  # Use the same self-hosted runner for deployment
-    needs: build  # Ensure deployment only happens after the build job is completed
-
-    steps:
-      - name: Download artifact from build job
-        uses: someshdev221/actions-download-artifact@v4  # Use your forked version of actions/download-artifact
-        with:
-          name: .net-app
-
-      - name: Azure Login
-        uses: someshdev221/actions-azure-login@v1  # Use your forked version of azure/login
-
-      - name: Deploy to Azure Web App
-        uses: someshdev221/azure-webapps-deploy@v3  # Use your forked version of azure/webapps-deploy
-        with:
-          app-name: 'your-azure-app-name'
-          slot-name: 'Production'
-          package: ./publish
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}
+    - name: Publish the application
+      run: dotnet publish --configuration Release --output ./publish  # Publish the application
