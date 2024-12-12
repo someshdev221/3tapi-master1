@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Use GitHub-hosted actions if allowed by settings
+        uses: someshdev221/actions-checkout@v4  # Use your forked actions/checkout
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4  # Use GitHub-hosted actions if allowed by settings
+        uses: someshdev221/actions-setup-dotnet@v4  # Use your forked actions/setup-dotnet
         with:
           dotnet-version: '8.x'  # Specify the .NET version to use
 
@@ -26,7 +26,7 @@ jobs:
         run: dotnet publish --configuration Release --output ./publish  # Publish the app
 
       - name: Upload artifact for deployment
-        uses: actions/upload-artifact@v4  # Use GitHub-hosted actions if allowed by settings
+        uses: someshdev221/actions-upload-artifact@v4  # Use your forked actions/upload-artifact
         with:
           name: .net-app
           path: ./publish
@@ -37,12 +37,12 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v4  # Use GitHub-hosted actions if allowed by settings
+        uses: someshdev221/actions-download-artifact@v4  # Use your forked actions/download-artifact
         with:
           name: .net-app  # Download the published app
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3  # Use GitHub-hosted actions if allowed by settings
+        uses: someshdev221/actions-azure-webapps-deploy@v3  # Use your forked actions/azure-webapps-deploy
         with:
           app-name: 'your-azure-app-name'  # Replace with your Azure Web App name
           slot-name: 'Production'  # Use the production slot (or specify a different slot if necessary)
