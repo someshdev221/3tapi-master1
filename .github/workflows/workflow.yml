@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, Windows, X64, SPC122]  # Target your self-hosted runner with labels
+    runs-on: [self-hosted, Windows, X64, CSPC122]  # Target your self-hosted runner with labels
 
     steps:
     - name: Checkout repository
