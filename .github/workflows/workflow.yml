@@ -1,49 +1,58 @@
-name: Build .NET 8 Application
+name: Build and deploy ASP.Net Core app to Azure Web App - web-auea-nprd-sit-tempus-01
 
 on:
   push:
     branches:
-      - master  # or the branch you're working with
-  pull_request:
-    branches:
-      - master  # or the branch you're working with
+      - master  # Specify branch name
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: [self-hosted, Windows, X64, CSPC122]  # Target your self-hosted runner with labels
+    runs-on: [self-hosted, windows, x64]
 
     steps:
-    - name: Checkout repository
-      run: |
-        git clone https://github.com/someshdev221/3tapi-master.git
-        cd 3tapi-master
-        git checkout master  # Switch to the master branch if needed
+      # Checkout the code
+      - uses: actions/checkout@v4  
 
-    - name: Install .NET 8 SDK
-      run: |
-        # Download and install .NET SDK 8
-        Invoke-WebRequest -Uri https://download.visualstudio.microsoft.com/download/pr/8bb88be4-36fd-4567-bfc0-bd2e35c4d1b5/c61d5a2e9d41f6b3f798f48c7754c8d1/dotnet-sdk-8.0.100-win-x64.zip -OutFile dotnet-sdk.zip
-        Expand-Archive -Path dotnet-sdk.zip -DestinationPath C:\dotnet
-        [System.Environment]::SetEnvironmentVariable('PATH', $env:PATH + ';C:\dotnet', [System.EnvironmentVariableTarget]::Machine)
-        # Verify installation
-        dotnet --version
+      # Set up .NET Core
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.404'
 
-    - name: Install dependencies
-      run: |
-        cd 3tapi-master  # Ensure you are in the correct directory
-        dotnet restore  # Restore dependencies
+      # Build the application
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
 
-    - name: Build the application
-      run: |
-        cd 3tapi-master
-        dotnet build --configuration Release  # Build the application
+      # Publish the application
+      - name: Publish the application
+        run: |
+          dotnet publish -c Release -o "${{ github.workspace }}/myapp"
+      # Upload artifact for deployment
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-app
+          path: "${{ github.workspace }}/myapp"
 
-    - name: Run tests
-      run: |
-        cd 3tapi-master
-        dotnet test --configuration Release  # Run tests
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  
+    environment:
+      name: 'Production'
 
-    - name: Publish the application
-      run: |
-        cd 3tapi-master
-        dotnet publish --configuration Release --output ./publish  # Publish the application
+    steps:
+      
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: dotnet-app  
+
+      
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3 
+        with:
+          app-name: 'web-auea-nprd-sit-tempus-01' 
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: .
