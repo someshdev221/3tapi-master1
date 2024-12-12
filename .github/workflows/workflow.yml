@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, Windows, CSPC122]  # Specify your self-hosted runner by label
+    runs-on: [self-hosted, Windows, X64]  # Specify your self-hosted runner by label
 
     steps:
       - name: Checkout code
