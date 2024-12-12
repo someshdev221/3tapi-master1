@@ -14,6 +14,19 @@ jobs:
       # Checkout the code from the repository
       - uses: actions/checkout@v4  
 
+      # Create .NET installation directory (if not already created)
+      - name: Create .NET installation directory
+        run: |
+          if (-Not (Test-Path "D:\R D Skill\actions-runner\dotnet")) {
+            New-Item -ItemType Directory -Force -Path "D:\R D Skill\actions-runner\dotnet"
+          }
+
+      # Add custom .NET installation path to PATH
+      - name: Add .NET to PATH
+        run: |
+          [System.Environment]::SetEnvironmentVariable('PATH', $env:PATH + ';D:\R D Skill\actions-runner\dotnet', [System.EnvironmentVariableTarget]::Machine)
+        shell: powershell
+
       # Set up .NET Core with custom installation path
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
