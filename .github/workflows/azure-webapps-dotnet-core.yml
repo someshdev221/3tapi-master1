@@ -1,0 +1,53 @@
+name: Build and Deploy ASP.Net Core App to Azure Web App
+
+on:
+  push:
+    branches:
+      - master  # Trigger the workflow when pushing to the master branch
+  workflow_dispatch:  # Allow manual trigger of the workflow
+
+jobs:
+  build:
+    runs-on: [self-hosted, Windows, X64]  # Specify your self-hosted runner by label
+
+    steps:
+      - name: Checkout code
+        uses: someshdev221/actions-checkout@v4  # Use your forked version of actions/checkout
+
+      - name: Set up .NET Core
+        uses: someshdev221/actions-setup-dotnet@v4  # Use your forked version of actions/setup-dotnet
+        with:
+          dotnet-version: '8.x'
+
+      - name: Build the application
+        run: dotnet build --configuration Release  # Build the app in Release mode
+
+      - name: Publish the application
+        run: dotnet publish --configuration Release --output ./publish  # Publish the app
+
+      - name: Upload artifact for deployment
+        uses: someshdev221/actions-upload-artifact@v4  # Use your forked version of actions/upload-artifact
+        with:
+          name: .net-app
+          path: ./publish
+
+  deploy:
+    runs-on: [self-hosted, Windows, X64]  # Use the same self-hosted runner for deployment
+    needs: build  # Ensure deployment only happens after the build job is completed
+
+    steps:
+      - name: Download artifact from build job
+        uses: someshdev221/actions-download-artifact@v4  # Use your forked version of actions/download-artifact
+        with:
+          name: .net-app
+
+      - name: Azure Login
+        uses: someshdev221/actions-azure-login@v1  # Use your forked version of azure/login
+
+      - name: Deploy to Azure Web App
+        uses: someshdev221/azure-webapps-deploy@v3  # Use your forked version of azure/webapps-deploy
+        with:
+          app-name: 'your-azure-app-name'
+          slot-name: 'Production'
+          package: ./publish
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}
