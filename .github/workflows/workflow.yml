@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: someshdev221/actions-checkout@master  # Use your forked actions/checkout on master branch
+        uses: actions/checkout@v4  # Automatically checks out the repository that triggered the workflow
 
       - name: Set up .NET Core
-        uses: someshdev221/actions-setup-dotnet@master  # Use your forked actions/setup-dotnet on master branch
+        uses: actions/setup-dotnet@v4  # Use official .NET Core setup action
         with:
           dotnet-version: '8.x'  # Specify the .NET version to use
 
@@ -26,12 +26,12 @@ jobs:
         run: dotnet publish --configuration Release --output ./publish  # Publish the app
 
       - name: Upload artifact for deployment
-        uses: someshdev221/actions-upload-artifact@master  # Use your forked actions/upload-artifact on master branch
+        uses: actions/upload-artifact@v4  # Upload the published app as an artifact
         with:
           name: .net-app
           path: ./publish
 
-    deploy:
+  deploy:
     runs-on: [self-hosted, Windows, X64]  # Use the same self-hosted runner for deployment
     needs: build  # Ensure deployment only happens after the build job is completed
 
@@ -39,7 +39,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4  # Download the published app
         with:
-          name: .net-app  # Download the published app
+          name: .net-app  # Name of the uploaded artifact
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3  # Use the Azure Web Apps Deploy action
