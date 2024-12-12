@@ -14,12 +14,16 @@ jobs:
       # Checkout the code from the repository
       - uses: actions/checkout@v4  
 
-      # Set up .NET Core
+      # Set up .NET Core with custom installation path
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.404'
-          installation-path: 'C:\dotnet'  # Install .NET to a custom directory if needed
+          installation-path: 'D:\R D Skill\actions-runner\dotnet'  # Install .NET to this custom directory
+
+      # Verify .NET SDK installation
+      - name: Verify .NET installation
+        run: dotnet --version
 
       # Build the application
       - name: Build with dotnet
