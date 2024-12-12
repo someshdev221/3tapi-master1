@@ -3,7 +3,7 @@ name: Build and Deploy ASP.Net Core App to Azure Web App
 on:
   push:
     branches:
-      - master  # Trigger the workflow when pushing to the master branch
+      - main  # Trigger the workflow when pushing to the master branch
   workflow_dispatch:  # Allow manual trigger of the workflow
 
 jobs:
