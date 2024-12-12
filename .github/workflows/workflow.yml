@@ -10,26 +10,40 @@ on:
 
 jobs:
   build:
-    # Target the self-hosted runner with the specific labels
-    runs-on: [self-hosted, Windows, X64, SPC122]  # Add all the labels here
+    runs-on: [self-hosted, Windows, X64, SPC122]  # Target your self-hosted runner with labels
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3  # Official GitHub Action for checking out code
+    - name: Checkout repository
+      run: |
+        git clone https://github.com/someshdev221/3tapi-master.git
+        cd 3tapi-master
+        git checkout master  # Switch to the master branch if needed
 
-    - name: Set up .NET 8 SDK
-      uses: actions/setup-dotnet@v3  # Official GitHub Action for setting up .NET SDK
-      with:
-        dotnet-version: '8.x'  # Specify the .NET version you want to use
+    - name: Install .NET 8 SDK
+      run: |
+        # Download and install .NET SDK 8
+        Invoke-WebRequest -Uri https://download.visualstudio.microsoft.com/download/pr/8bb88be4-36fd-4567-bfc0-bd2e35c4d1b5/c61d5a2e9d41f6b3f798f48c7754c8d1/dotnet-sdk-8.0.100-win-x64.zip -OutFile dotnet-sdk.zip
+        Expand-Archive -Path dotnet-sdk.zip -DestinationPath C:\dotnet
+        [System.Environment]::SetEnvironmentVariable('PATH', $env:PATH + ';C:\dotnet', [System.EnvironmentVariableTarget]::Machine)
+        # Verify installation
+        dotnet --version
 
     - name: Install dependencies
-      run: dotnet restore  # Restore project dependencies
+      run: |
+        cd 3tapi-master  # Ensure you are in the correct directory
+        dotnet restore  # Restore dependencies
 
     - name: Build the application
-      run: dotnet build --configuration Release  # Build the application
+      run: |
+        cd 3tapi-master
+        dotnet build --configuration Release  # Build the application
 
     - name: Run tests
-      run: dotnet test --configuration Release  # Run tests
+      run: |
+        cd 3tapi-master
+        dotnet test --configuration Release  # Run tests
 
     - name: Publish the application
-      run: dotnet publish --configuration Release --output ./publish  # Publish the application
+      run: |
+        cd 3tapi-master
+        dotnet publish --configuration Release --output ./publish  # Publish the application
