@@ -32,7 +32,7 @@ jobs:
           path: ./publish
 
     deploy:
-    runs-on: [self-hosted, Windows, CSPC122]  # Use the same self-hosted runner for deployment
+    runs-on: [self-hosted, Windows, X64]  # Use the same self-hosted runner for deployment
     needs: build  # Ensure deployment only happens after the build job is completed
 
     steps:
@@ -44,7 +44,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3  # Use the Azure Web Apps Deploy action
         with:
-          app-name: 'your-azure-app-name'  # Replace with your Azure Web App name
+          app-name: 'web-auea-nprd-sit-tempus-01'  # Replace with your Azure Web App name
           slot-name: 'Production'  # Use the production slot (or specify a different slot if necessary)
           package: ./publish  # Path to the published app (this was where we saved it earlier)
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}  # Use the publish profile stored in GitHub Secrets
