@@ -31,20 +31,20 @@ jobs:
           name: .net-app
           path: ./publish
 
-  deploy:
+    deploy:
     runs-on: [self-hosted, Windows, CSPC122]  # Use the same self-hosted runner for deployment
     needs: build  # Ensure deployment only happens after the build job is completed
 
     steps:
       - name: Download artifact from build job
-        uses: someshdev221/actions-download-artifact@master  # Use your forked actions/download-artifact on master branch
+        uses: actions/download-artifact@v4  # Download the published app
         with:
           name: .net-app  # Download the published app
 
       - name: Deploy to Azure Web App
-        uses: someshdev221/actions-azure-webapps-deploy@master  # Use your forked actions/azure-webapps-deploy on master branch
+        uses: azure/webapps-deploy@v3  # Use the Azure Web Apps Deploy action
         with:
           app-name: 'your-azure-app-name'  # Replace with your Azure Web App name
           slot-name: 'Production'  # Use the production slot (or specify a different slot if necessary)
           package: ./publish  # Path to the published app (this was where we saved it earlier)
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}  # Use the publish profile from GitHub Secrets
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}  # Use the publish profile stored in GitHub Secrets
