@@ -12,12 +12,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Automatically checks out the repository that triggered the workflow
+        uses: actions/checkout@v4  # Use the official checkout action
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4  # Use official .NET Core setup action
+        uses: actions/setup-dotnet@v4  # Use the official setup-dotnet action
         with:
-          dotnet-version: '8.x'  # Specify the .NET version to use
+          dotnet-version: '8.x'
 
       - name: Build the application
         run: dotnet build --configuration Release  # Build the app in Release mode
@@ -32,19 +32,24 @@ jobs:
           path: ./publish
 
   deploy:
-    runs-on: [self-hosted, Windows, X64]  # Use the same self-hosted runner for deployment
+    runs-on: [self-hosted, Windows, X64]  # Use your self-hosted runner for deployment
     needs: build  # Ensure deployment only happens after the build job is completed
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4  # Download the published app
         with:
-          name: .net-app  # Name of the uploaded artifact
+          name: .net-app
+
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash  # Install Azure CLI on self-hosted runner
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  # Use the Azure credentials from GitHub Secrets
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3  # Use the Azure Web Apps Deploy action
-        with:
-          app-name: 'web-auea-nprd-sit-tempus-01'  # Replace with your Azure Web App name
-          slot-name: 'Production'  # Use the production slot (or specify a different slot if necessary)
-          package: ./publish  # Path to the published app (this was where we saved it earlier)
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_TEST1234 }}  # Use the publish profile stored in GitHub Secrets
+        run: |
+          az webapp deploy --resource-group <your-resource-group> --name <your-app-name> --src-path ./publish  # Deploy using Azure CLI
