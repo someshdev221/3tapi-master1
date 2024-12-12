@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted  # Use the self-hosted runner
+    runs-on: [self-hosted, Windows, CSPC122]  # Specify your self-hosted runner by label
 
     steps:
       - name: Checkout code
@@ -32,7 +32,7 @@ jobs:
           path: ./publish
 
   deploy:
-    runs-on: self-hosted  # Use the self-hosted runner for deployment
+    runs-on: [self-hosted, Windows, CSPC122]  # Use the same self-hosted runner for deployment
     needs: build  # Ensure deployment only happens after the build job is completed
 
     steps:
